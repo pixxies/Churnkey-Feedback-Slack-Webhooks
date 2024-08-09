@@ -170,7 +170,9 @@ listener.post("/webhook", async (req, res) => {
 });
 
 (async () => {
-  await app.start(process.env.PORT || 3000);
-  listener.listen(3001, () => console.log("Express listener on port 3001"));
+  await app.start(process.env.SLACK_BOT_PORT || 3000);
+  listener.listen(process.env.EXPRESS_SERVER_PORT || 3001, () =>
+    console.log("Express listener on port 3001")
+  );
   console.log("Churnkey Reports Slack app is running!");
 })();
