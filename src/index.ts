@@ -117,8 +117,6 @@ listener.post("/webhook", async (req, res) => {
       }`;
     }
 
-    console.log(slackMessageBody(feedback, followupResponse));
-
     if (feedback || followupResponse) {
       const paddleCustomerUrl = `https://vendors.paddle.com/subscriptions/customers/manage/${subscription_id}`;
       await app.client.chat.postMessage({
