@@ -86,7 +86,6 @@ listener.post("/webhook", async (req, res) => {
     const { feedback, followupResponse, surveyResponse } = data.session;
     const { subscription_id, user_email, last_payment, state } = data.customer;
     const plan = data.customer.subscriptions.data[0].plan;
-    const isTrial = state === "trialing" ? true : false;
 
     function slackMessageBody(
       feedback: string | undefined,
@@ -100,16 +99,20 @@ listener.post("/webhook", async (req, res) => {
       return message;
     }
 
+    let isTrial;
+
     function billingInfo(customer: any) {
       let moneyAmount;
       if (customer.last_payment && customer.last_payment.amount > 0) {
         moneyAmount = `${getCurrency(
           last_payment.currency
         )}${last_payment.amount.toFixed(2)}`;
+        isTrial = false;
       } else {
         moneyAmount = `${getCurrency(plan.currency)}${(
           plan.unit_amount / 100
         ).toFixed(2)}`;
+        isTrial = true;
       }
 
       return `${moneyAmount}/${plan.recurring.interval} ${
